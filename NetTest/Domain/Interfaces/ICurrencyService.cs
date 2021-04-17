@@ -8,6 +8,6 @@ namespace Domain.Interfaces
 {
 	public interface ICurrencyService
 	{
-		Task<Currency> GetDollarValueFromUrl(string url);
+		Task<Currency> GetValueFromUrl(string url);
 	}
 }
