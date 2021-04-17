@@ -8,5 +8,11 @@ namespace Domain.Model
 	{
 		public decimal Buy { get; set; }
 		public decimal Sell { get; set; }
+
+		public Currency(decimal buy, decimal sell)
+		{
+			Buy = buy;
+			Sell = sell;
+		}
 	}
 }
