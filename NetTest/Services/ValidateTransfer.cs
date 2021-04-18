@@ -1,5 +1,4 @@
-﻿using Domain.Enums;
-using Domain.Interfaces;
+﻿using Domain.Interfaces;
 using Domain.Model;
 using System.Linq;
 using System.Collections.Generic;
@@ -9,10 +8,17 @@ namespace Services
 {
 	public class ValidateTransfer : IValidateTransfer
 	{
-		public bool IsUnderTheLimit(TransferHistory transfer, IList<TransferHistory> transfers, IList<TransferLimit> limits)
+		private readonly IList<TransferLimit> _transferLimits;
+
+        public ValidateTransfer(IList<TransferLimit> limits)
+        {
+			_transferLimits = limits;
+        }
+
+		public bool IsUnderTheLimit(TransferHistory transfer, IList<TransferHistory> transfers)
 		{
 			bool result = false;
-			decimal limit = GetLimitForThisTransfer(transfer, limits);
+			decimal limit = GetLimitForThisTransfer(transfer);
 			if (TransferIsDoable(limit, transfer))
 			{
 				if (TransferByUserDoesNotExist(transfer, transfers))
@@ -22,26 +28,18 @@ namespace Services
 				else
 				{
 					var transferLimit = GetLimitForThisTransfer(transfer, transfers, limit);
-					if (transferLimit > 0)
-					{
-						result = TransferIsDoable(transferLimit, transfer);
-					}
-					else
-					{
-						result = false;
-					}
+					result = transferLimit >= transfer.ExchangeAmount;
 				}
 			}
 
 			return result;
 		}
 
-		private decimal GetLimitForThisTransfer(TransferHistory transfer, IList<TransferLimit> limits)
+		private decimal GetLimitForThisTransfer(TransferHistory transfer)
 		{
 
-			var limit = limits.First(t => t.UserId == transfer.UserId &&
-									 t.CurrencyCode == transfer.CurrencyCode &&
-									 t.Date.Month == transfer.Date.Month);
+			var limit = _transferLimits.FirstOrDefault(t => t.CurrencyCode == transfer.CurrencyCode &&
+														t.Date.Month == transfer.Date.Month);
 			if (limit == null)
 			{
 				throw new System.Exception("This user cannot perform a transfer");
@@ -85,7 +83,7 @@ namespace Services
 		/// <returns></returns>
 		private bool TransferIsDoable(decimal transferLimit, TransferHistory transfer)
 		{
-			return transferLimit > transfer.ExchangeAmount;
+			return transferLimit >= transfer.ExchangeAmount;
 		}
 	}
 }

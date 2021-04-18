@@ -7,13 +7,13 @@ namespace Domain.Model
 	public class Transfer
 	{
 		public int UserId { get; set; }
-		public decimal ExchangeAmount { get; set; }
 		public string CurrencyCode { get; set; }
 		public DateTime Date { get; set; }
 	}
 
 	public class TransferHistory : Transfer
 	{
+		public decimal ExchangeAmount { get; set; }
 		public int ID { get; set; }
 	}
 

@@ -6,6 +6,6 @@ namespace Domain.Interfaces
 {
 	public interface IValidateTransfer
 	{
-		bool IsUnderTheLimit(TransferHistory transfer, IList<TransferHistory> transfers, IList<TransferLimit> limits);
+		bool IsUnderTheLimit(TransferHistory transfer, IList<TransferHistory> transfers);
 	}
 }
