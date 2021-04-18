@@ -25,7 +25,7 @@ namespace Domain.Currencies
 			return _currency;
 		}
 
-		public static Currency GetDollar(decimal buy, decimal sell) => new Dollar(buy, sell);
-		public static Currency GetReal(Dollar dollar, decimal exchangeRate) => new Real(dollar, exchangeRate);
+		public static Dollar GetDollar(decimal buy, decimal sell) => new Dollar(buy, sell);
+		public static Real GetReal(Dollar dollar, decimal exchangeRate) => new Real(dollar, exchangeRate);
 	}
 }
