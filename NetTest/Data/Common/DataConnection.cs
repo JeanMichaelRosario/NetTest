@@ -3,11 +3,11 @@ using Domain.Model;
 
 namespace Data.Common
 {
-	public abstract class Data
+	public abstract class DataConnection
 	{
 		protected readonly string Connection;
 		
-		public Data(string connection)
+		public DataConnection(string connection)
 		{
 			Connection = connection;
 		}
