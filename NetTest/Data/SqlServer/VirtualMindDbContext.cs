@@ -13,7 +13,7 @@ namespace Data.SqlServer
 		{
 			Connection = connection;
 		}
-		public DbSet<Transfer> Transfers { get; set; }
+		public DbSet<TransferHistory> Transfers { get; set; }
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{

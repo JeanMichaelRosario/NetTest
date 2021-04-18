@@ -12,6 +12,6 @@ namespace Data.Common
 			Connection = connection;
 		}
 		
-		public Table<Transfer> Transfers { get; set; }
+		public Table<TransferHistory> Transfers { get; set; }
 	}
 }

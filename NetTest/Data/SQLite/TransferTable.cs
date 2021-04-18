@@ -7,14 +7,14 @@ using System.Text;
 
 namespace Data.SQLite
 {
-	public class TransferTable : Table<Transfer>
+	public class TransferTable : Table<TransferHistory>
 	{
 		public TransferTable(string conn): base(conn)
 		{
 
 		}
 
-		public override void Add(Transfer obj)
+		public override void Add(TransferHistory obj)
 		{
 			using (var con = new SqliteConnection(Connection))
 			{
@@ -33,9 +33,9 @@ namespace Data.SQLite
 			}
 		}
 
-		public override IEnumerable<Transfer> GetAll()
+		public override IEnumerable<TransferHistory> GetAll()
 		{
-			List<Transfer> transfers = new List<Transfer>();
+			List<TransferHistory> transfers = new List<TransferHistory>();
 
 			using (var con = new SqliteConnection(Connection))
 			{
@@ -46,7 +46,7 @@ namespace Data.SQLite
 				{
 					while (reader.Read())
 					{
-						var transfer = new Transfer()
+						var transfer = new TransferHistory()
 						{
 							ID = reader.GetInt32(0),
 							UserId = reader.GetInt32(1),
@@ -61,7 +61,7 @@ namespace Data.SQLite
 			return transfers;
 		}
 
-		public override void Remove(Transfer obj)
+		public override void Remove(TransferHistory obj)
 		{
 			using (var con = new SqliteConnection(Connection))
 			{
@@ -77,7 +77,7 @@ namespace Data.SQLite
 			}
 		}
 
-		public override void Update(int id, Transfer obj)
+		public override void Update(int id, TransferHistory obj)
 		{
 			using (var con = new SqliteConnection(Connection))
 			{

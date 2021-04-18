@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Data.SqlServer
 {
-	public class TransferTable : Table<Transfer>
+	public class TransferTable : Table<TransferHistory>
 	{
 		private readonly VirtualMindDbContext dbContext;
 
@@ -15,24 +15,24 @@ namespace Data.SqlServer
 			dbContext = new VirtualMindDbContext(connection);
 		}
 
-		public override void Add(Transfer obj)
+		public override void Add(TransferHistory obj)
 		{
 			dbContext.Transfers.Add(obj);
 			dbContext.SaveChanges();
 		}
 
-		public override IEnumerable<Transfer> GetAll()
+		public override IEnumerable<TransferHistory> GetAll()
 		{
 			return dbContext.Transfers;
 		}
 
-		public override void Remove(Transfer obj)
+		public override void Remove(TransferHistory obj)
 		{
 			dbContext.Transfers.Remove(obj);
 			dbContext.SaveChanges();
 		}
 
-		public override void Update(int id, Transfer obj)
+		public override void Update(int id, TransferHistory obj)
 		{
 			dbContext.Transfers.Update(obj);
 			dbContext.SaveChanges();
