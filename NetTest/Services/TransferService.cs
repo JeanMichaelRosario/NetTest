@@ -2,24 +2,44 @@
 using Domain.Model;
 using System.Linq;
 using System.Collections.Generic;
-using System.Text;
+using Data.Interfaces;
 
 namespace Services
 {
-	public class ValidateTransfer : IValidateTransfer
+	public class TransferService : ITransferService
 	{
 		private readonly IList<TransferLimit> _transferLimits;
+		private readonly IDataConnection _dataConnection;
+		private readonly ICurrencyService _currencyService;
 
-        public ValidateTransfer(IList<TransferLimit> limits)
+        public TransferService(IList<TransferLimit> limits, IDataConnection data, ICurrencyService currencyService)
         {
 			_transferLimits = limits;
+			_dataConnection = data;
+			_currencyService = currencyService;
         }
 
-		public bool IsUnderTheLimit(TransferHistory transfer, IList<TransferHistory> transfers)
+		public decimal MakeTransaction(TransferHistory transfer)
+		{
+			var exchangeAmount = GetExchangeAmount(transfer.ExchangeAmount, transfer.CurrencyCode);
+			var listOfPreviousTransactions = _dataConnection.GetTransfers().GetAll().ToList();
+			if (IsUnderTheLimit(exchangeAmount, transfer, listOfPreviousTransactions))
+			{
+				transfer.ExchangeAmount = exchangeAmount;
+				SaveTransaction(transfer);
+				return transfer.ExchangeAmount;
+			}
+            else
+            {
+				throw new System.Exception("This user can not perform this transfer");
+            }
+		}
+
+        private bool IsUnderTheLimit(decimal exchangeAmount, TransferHistory transfer, IList<TransferHistory> transfers)
 		{
 			bool result = false;
 			decimal limit = GetLimitForThisTransfer(transfer);
-			if (TransferIsDoable(limit, transfer))
+			if (TransferIsDoable(limit, exchangeAmount))
 			{
 				if (TransferByUserDoesNotExist(transfer, transfers))
 				{
@@ -28,7 +48,7 @@ namespace Services
 				else
 				{
 					var transferLimit = GetLimitForThisTransfer(transfer, transfers, limit);
-					result = transferLimit >= transfer.ExchangeAmount;
+					result = TransferIsDoable(transferLimit, exchangeAmount);
 				}
 			}
 
@@ -38,11 +58,12 @@ namespace Services
 		private decimal GetLimitForThisTransfer(TransferHistory transfer)
 		{
 
-			var limit = _transferLimits.FirstOrDefault(t => t.CurrencyCode == transfer.CurrencyCode &&
+			var limit = _transferLimits.FirstOrDefault(t => t.UserId == transfer.UserId &&
+														t.CurrencyCode == transfer.CurrencyCode &&
 														t.Date.Month == transfer.Date.Month);
 			if (limit == null)
 			{
-				throw new System.Exception("This user cannot perform a transfer");
+				throw new System.Exception("This user cannot perform a transfer, limit is not defined");
 			}
 
 			return limit.Limit;
@@ -81,9 +102,19 @@ namespace Services
 		/// <param name="transferLimit"></param>
 		/// <param name="transfer"></param>
 		/// <returns></returns>
-		private bool TransferIsDoable(decimal transferLimit, TransferHistory transfer)
+		private bool TransferIsDoable(decimal transferLimit, decimal exchangeAmount)
 		{
-			return transferLimit >= transfer.ExchangeAmount;
+			return transferLimit >= exchangeAmount;
+		}
+
+        private decimal GetExchangeAmount(decimal exchangeAmount, string currencyCode)
+        {
+			var currency = _currencyService.GetCurrencyByCode(currencyCode).Result;
+			return exchangeAmount / currency.Sell;
+        }
+		private void SaveTransaction(TransferHistory transfer)
+		{
+			_dataConnection.GetTransfers().Add(transfer);
 		}
 	}
 }
