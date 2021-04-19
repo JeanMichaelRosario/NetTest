@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace RestApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class PurchaseController : ControllerBase
     {
@@ -27,8 +27,9 @@ namespace RestApi.Controllers
         {
             try
             {
-                var result = _validateTransfer.MakeTransaction(transfer);
-                return Ok(result);
+                transfer.Date = DateTime.Now;
+                var result = _validateTransfer.MakeTransaction(transfer).ToString();
+                return Ok($"{result} {transfer.CurrencyCode}");
             }
             catch (Exception ex)
             {
