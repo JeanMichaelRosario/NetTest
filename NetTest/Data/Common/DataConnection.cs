@@ -1,5 +1,6 @@
 ﻿using Data.Interfaces;
 using Domain.Model;
+using Microsoft.Extensions.Options;
 
 namespace Data.Common
 {
@@ -7,9 +8,9 @@ namespace Data.Common
 	{
 		protected readonly string Connection;
 		
-		public DataConnection(string connection)
+		public DataConnection(IOptionsMonitor<string> connection)
 		{
-			Connection = connection;
+			Connection = connection.CurrentValue;
 		}
 		
 		protected Table<TransferHistory> Transfers { get; set; }
