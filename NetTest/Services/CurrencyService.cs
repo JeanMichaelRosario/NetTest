@@ -1,5 +1,6 @@
 ﻿using Domain.Interfaces;
 using Domain.Model;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
 using System.Net.Http;
@@ -10,20 +11,21 @@ namespace Services
 	public class CurrencyService : ICurrencyService
 	{
 		private readonly string _dollarUrl;
-		private readonly HttpClient _httpClient;
 		private const string DOLLAR_CODE = "usd";
 		private const string REAL_CODE = "brl";
 		private const decimal REAL_EXCHANGE_RATE = 0.25M;
 
-        public CurrencyService(string dollarUrl, HttpClient httpClient)
+        public CurrencyService(IOptionsMonitor<string> dollarUrl)
         {
-			_dollarUrl = dollarUrl;
-			_httpClient = httpClient;
+			_dollarUrl = dollarUrl.CurrentValue;
         }
 		public async Task<Currency> GetDollar()
 		{
-			var result = await _httpClient.GetAsync(_dollarUrl);
-			return await GetValuesFromContentResult(result);
+            using (var client = new HttpClient())
+            {
+				var result = await client.GetAsync(_dollarUrl);
+				return await GetValuesFromContentResult(result);
+			}
 		}
 
 		public async Task<Currency> GetCurrencyByCode(string currencyCode)
