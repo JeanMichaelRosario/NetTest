@@ -3,6 +3,7 @@ using Domain.Model;
 using System.Linq;
 using System.Collections.Generic;
 using Data.Interfaces;
+using System;
 
 namespace Services
 {
@@ -31,7 +32,7 @@ namespace Services
 			}
             else
             {
-				throw new System.Exception("This user can not perform this transfer");
+				throw new System.Exception("This user can not perform this transfer. This purchase is over the limit for this user");
             }
 		}
 
@@ -110,7 +111,7 @@ namespace Services
         private decimal GetExchangeAmount(decimal exchangeAmount, string currencyCode)
         {
 			var currency = _currencyService.GetCurrencyByCode(currencyCode).Result;
-			return exchangeAmount / currency.Sell;
+			return Math.Round(exchangeAmount / currency.Sell, 2);
         }
 		private void SaveTransaction(TransferHistory transfer)
 		{
