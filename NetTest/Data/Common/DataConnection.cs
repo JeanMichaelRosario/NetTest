@@ -3,7 +3,7 @@ using Domain.Model;
 
 namespace Data.Common
 {
-	public abstract class DataConnection
+	public abstract class DataConnection : IDataConnection
 	{
 		protected readonly string Connection;
 		
@@ -12,6 +12,7 @@ namespace Data.Common
 			Connection = connection;
 		}
 		
-		public Table<TransferHistory> Transfers { get; set; }
+		protected Table<TransferHistory> Transfers { get; set; }
+		public ITable<TransferHistory> GetTransfers() => Transfers;
 	}
 }
