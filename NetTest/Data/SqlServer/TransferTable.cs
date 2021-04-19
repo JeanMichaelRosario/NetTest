@@ -17,24 +17,24 @@ namespace Data.SqlServer
 
 		public override void Add(TransferHistory obj)
 		{
-			dbContext.Transfers.Add(obj);
+			dbContext.Transfer.Add(obj);
 			dbContext.SaveChanges();
 		}
 
 		public override IEnumerable<TransferHistory> GetAll()
 		{
-			return dbContext.Transfers;
+			return dbContext.Transfer;
 		}
 
 		public override void Remove(TransferHistory obj)
 		{
-			dbContext.Transfers.Remove(obj);
+			dbContext.Transfer.Remove(obj);
 			dbContext.SaveChanges();
 		}
 
 		public override void Update(int id, TransferHistory obj)
 		{
-			dbContext.Transfers.Update(obj);
+			dbContext.Transfer.Update(obj);
 			dbContext.SaveChanges();
 		}
 	}
