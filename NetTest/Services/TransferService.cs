@@ -32,7 +32,7 @@ namespace Services
 			}
             else
             {
-				throw new System.Exception("This user can not perform this transfer. This purchase is over the limit for this user");
+				throw new Exception("This user can not perform this transfer. This purchase is over the limit for this user");
             }
 		}
 
