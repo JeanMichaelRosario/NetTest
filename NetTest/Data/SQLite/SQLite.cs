@@ -5,9 +5,9 @@ namespace Data.SQLite
 {
 	public class SQLite : DataConnection
 	{
-		public SQLite(IOptionsMonitor<string> connection): base(connection)
+		public SQLite(string connection): base(connection)
 		{
-			Transfers = new TransferTable(connection.CurrentValue);
+			Transfers = new TransferTable(connection);
 		}
 	}
 }

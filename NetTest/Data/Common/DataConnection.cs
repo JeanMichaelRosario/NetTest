@@ -8,9 +8,9 @@ namespace Data.Common
 	{
 		protected readonly string Connection;
 		
-		public DataConnection(IOptionsMonitor<string> connection)
+		public DataConnection(string connection)
 		{
-			Connection = connection.CurrentValue;
+			Connection = connection;
 		}
 		
 		protected Table<TransferHistory> Transfers { get; set; }

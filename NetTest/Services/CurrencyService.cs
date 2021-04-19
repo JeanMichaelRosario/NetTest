@@ -15,9 +15,9 @@ namespace Services
 		private const string REAL_CODE = "brl";
 		private const decimal REAL_EXCHANGE_RATE = 0.25M;
 
-        public CurrencyService(IOptionsMonitor<string> dollarUrl)
+        public CurrencyService(string dollarUrl)
         {
-			_dollarUrl = dollarUrl.CurrentValue;
+			_dollarUrl = dollarUrl;
         }
 		public async Task<Currency> GetDollar()
 		{
